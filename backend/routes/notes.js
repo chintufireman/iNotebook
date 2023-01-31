@@ -23,7 +23,7 @@ router.post(
     body("title", "Enter a Valid Title").isLength({ min: 3 }),
     body("description", "Description must be at least 5 characters").isLength({
       min: 5,
-    })
+    }),
   ],
   async (req, res) => {
     try {
@@ -49,32 +49,71 @@ router.post(
   }
 );
 
-
-
 //Route 3 PUT update an existing note /api/notes/upatenote. Login required
-router.put('/updatenote/:id',fetchUser,async (req,res)=>{
-  const {title,description,tag} = req.body;
-  
-  //Create a newNote object
-  const newNote = {}
-  if(title){newNote.title=title}
-  if(description){newNote.description=description}
-  if(tag){newNote.tag=tag}
+router.put("/updatenote/:id", fetchUser, async (req, res) => {
+  try {
+    const { title, description, tag } = req.body;
 
+    //Create a newNote object
+    const newNote = {};
+    if (title) {
+      newNote.title = title;
+    }
+    if (description) {
+      newNote.description = description;
+    }
+    if (tag) {
+      newNote.tag = tag;
+    }
 
-  //Find the note to be updated and update it
-  let note=await Note.findById(req.params.id) // this id is the one which is passed in url
-  if(!note){res.status(404).send("Not found")}
+    //Find the note to be updated and update it
+    let note = await Note.findById(req.params.id); // this id is the one which is passed in url
+    if (!note) {
+      res.status(404).send("Not found");
+    }
 
-  if(note.user.toString()!==req.user.id){
-    return res.status(401).send("Not Allowed!!")
+    if (note.user.toString() !== req.user.id) {
+      return res.status(401).send("Not Allowed!!");
+    }
+
+    note = await Note.findByIdAndUpdate(
+      req.params.id,
+      { $set: newNote },
+      { new: true }
+    );
+    //new:true means if any new contact comes then it gets created
+
+    res.json({ note });
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).send("Some error occured");
   }
+});
 
-  note = await Note.findByIdAndUpdate(req.params.id, {$set: newNote}, {new:true})
-  //new:true means if any new contact comes then it gets created
+//Route 4 DELETE delete an existing note /api/notes/deletenote. Login required
+router.delete("/deletenote/:id", fetchUser, async (req, res) => {
+  try {
+    const { title, description, tag } = req.body;
 
-  res.json({note});
+    //Find the note to be deleted
+    let note = await Note.findById(req.params.id);
+    if (!note) {
+      res.status(404).send("Not found");
+    }
 
-})
+    //Allow deletion only if user owns this note
+    if (note.user.toString() !== req.user.id) {
+      return res.status(401).send("Not Allowed!!");
+    }
+
+    note = await Note.findByIdAndDelete(req.params.id);
+    //new:true means if any new contact comes then it gets created
+
+    res.json({ Success: "Note Has been deleted", note: note });
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).send("Some error occured");
+  }
+});
 
 module.exports = router;
