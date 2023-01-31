@@ -2,8 +2,11 @@ const express = require("express");
 const { default: mongoose } = require("mongoose");
 const User = require("../models/User");
 const { body, validationResult } = require("express-validator");
-
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const router = express.Router();
+
+const JWT_SECRET="Harshisagood$boy"
 
 //create user using POST: "/api/auth/createUser" Doesnot required AUTH
 router.post(
@@ -29,14 +32,27 @@ router.post(
           .json({ error: "a user with this email already exist!! " });
       }
       //return a promise after creating user
+      const salt = await bcrypt.genSalt(10);
+      const secPasswd = await bcrypt.hash(req.body.password,salt)
       user = await User.create({
         name: req.body.name,
         email: req.body.email,
-        password: req.body.password,
+        password: secPasswd,
       });
-      return res.json({ user });
+
+      const data={
+        user:{
+          id: user.id
+        }
+      }
+      const authToken=jwt.sign(data,JWT_SECRET)
+     
+       res.json({ authToken });
+    
     } catch(error) {
+      
       console.log(error.message);
+      
       res.status(500).send("Some error occured")
     } 
     
