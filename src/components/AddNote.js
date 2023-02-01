@@ -56,7 +56,7 @@ const AddNote = () => {
           </label>
         </div>
         <button onClick={handleClick} type="submit" className="btn btn-primary">
-          Submit
+          Add Note
         </button>
       </form>
     </div>

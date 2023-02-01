@@ -41,7 +41,12 @@ const NoteState = (props) => {
     //concat returns new array and push updates the array
   };
   //Delete a note
-  const deleteNote = () => {};
+  const deleteNote = (id) => {
+    //TODO API CALL
+    console.log("Note Deleted"+id);
+    let newNote = notes.filter((x)=>{return x._id!==id})
+    setNotes(newNote);
+  };
   //Edit a note
   const editNote = () => {};
 
