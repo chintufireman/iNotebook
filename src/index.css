@@ -11,3 +11,6 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+i {
+  cursor: pointer;
+}/* what this will do is it will bring pointer or hand like something to point it */
