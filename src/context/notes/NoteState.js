@@ -9,28 +9,25 @@ const NoteState = (props) => {
   //Fetch all notes
   const getNotes = async () => {
     //TODO API CALL
-
     const response = await fetch(`${host}/api/notes/fetchallnotes`, {
       method: "GET",
       headers: {
         "auth-token":
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjNkOGQzMGViZmM2NDk3ZWMzZjQ1NTViIn0sImlhdCI6MTY3NTE5MzEwN30.REd40HKou_SvZSMwi2kokZ1W4fyibbJL5YorULwpAl4",
-      }
+      },
     });
     const json = await response.json();
     console.log(json);
 
     //Set notes
-    setNotes(json)
+    setNotes(json);
   };
-
-
 
   //Add a note
   const addNote = async (title, description, tag) => {
     //TODO API CALL
 
-    const response = await fetch(`${host}/api/notes/fetchallnotes`, {
+    const response = await fetch(`${host}/api/notes/addnote`, {
       method: "POST",
 
       headers: {
@@ -39,7 +36,7 @@ const NoteState = (props) => {
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjNkOGQzMGViZmM2NDk3ZWMzZjQ1NTViIn0sImlhdCI6MTY3NTE5MzEwN30.REd40HKou_SvZSMwi2kokZ1W4fyibbJL5YorULwpAl4",
       },
 
-      body: JSON.stringify({title,description,tag}),
+      body: JSON.stringify({ title, description, tag }),
     });
 
     //Client side logic
@@ -57,8 +54,18 @@ const NoteState = (props) => {
     //concat returns new array and push updates the array
   };
   //Delete a note
-  const deleteNote = (id) => {
+  const deleteNote = async (id) => {
     //TODO API CALL
+    const response = await fetch(`${host}/api/notes/deletenote/${id}`, {
+      method: "DELETE",
+      headers: {
+        "auth-token":
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjNkOGQzMGViZmM2NDk3ZWMzZjQ1NTViIn0sImlhdCI6MTY3NTE5MzEwN30.REd40HKou_SvZSMwi2kokZ1W4fyibbJL5YorULwpAl4",
+      },
+    });
+
+    const json = response.json();
+
     console.log("Note Deleted" + id);
     let newNote = notes.filter((x) => {
       return x._id !== id;
@@ -68,17 +75,15 @@ const NoteState = (props) => {
   //Edit a note
   const editNote = async (id, title, description, tag) => {
     //API call
-
     const response = await fetch(`${host}/api/notes/updatenote/${id}`, {
       method: "POST",
-
       headers: {
         "Content-Type": "application/json",
         "auth-token":
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjNkOGQzMGViZmM2NDk3ZWMzZjQ1NTViIn0sImlhdCI6MTY3NTE5MzEwN30.REd40HKou_SvZSMwi2kokZ1W4fyibbJL5YorULwpAl4",
       },
 
-      body: JSON.stringify({title,description,tag}),
+      body: JSON.stringify({ title, description, tag }),
     });
 
     const json = response.json();
@@ -96,7 +101,7 @@ const NoteState = (props) => {
 
   return (
     <NoteContext.Provider
-      value={{ notes, setNotes, addNote, deleteNote, editNote,getNotes }}
+      value={{ notes, setNotes, addNote, deleteNote, editNote, getNotes }}
     >
       {props.children}
       {/* if you wont use props.children then where u are using NoteState it wont be able to display
