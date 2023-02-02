@@ -1,10 +1,9 @@
 import Notes from "./Notes";
 import Alert from "./Alert";
-const Home = () => {
+const Home = (props) => {
   return (
     <div>
-      <Alert message="This is iNoteBook "/>
-      <Notes />
+      <Notes showAlert={props.showAlert}/>
     </div>
   );
 };
