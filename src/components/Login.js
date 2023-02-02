@@ -60,6 +60,8 @@ const Login = () => {
             name="password"
             onChange={handleChange}
             value={credentials.password}
+            minLength={5}
+            required
           />
         </div>
         <button type="submit" className="btn btn-primary">
