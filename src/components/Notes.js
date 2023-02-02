@@ -1,21 +1,28 @@
-import React, { useContext, useEffect, useRef,useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import noteContext from "../context/notes/noteContext";
 import AddNote from "./AddNote";
 import NoteItem from "./NoteItem";
 
 const Notes = () => {
   const context = useContext(noteContext);
-  const { notes, getNotes } = context;
-  const { addNote } = context;
+
+  const { notes, getNotes, editNote } = context;
+
+  /* with the help of useRef hook u can give any element a reference and basically u can manipulate DOM*/
+  const ref = useRef(null);
+  const refClose = useRef(null);
+
   const [note, setNote] = useState({
+    id: "",
     etitle: "",
     edescription: "",
     etag: "general",
   });
+
   const handleClick = (e) => {
-    e.preventDefault();
-    
-    addNote(note.title, note.description, note.tag);
+    // e.preventDefault();
+    editNote(note.id, note.etitle, note.edescription, note.etag);
+    refClose.current.click();
   };
 
   const onChange = (e) => {
@@ -30,10 +37,13 @@ const Notes = () => {
   const updateNote = (currentNote) => {
     ref.current.click();
     /* ref.current where the reference is pointing and then click */
-    setNote({etitle:currentNote.title,edescription:currentNote.description,etag:currentNote.tag})
+    setNote({
+      id: currentNote._id,
+      etitle: currentNote.title,
+      edescription: currentNote.description,
+      etag: currentNote.tag,
+    });
   };
-  /* with the help of useRef hook u can give any element a reference */
-  const ref = useRef(null);
 
   return (
     <>
@@ -81,6 +91,7 @@ const Notes = () => {
                     name="etitle"
                     aria-describedby="emailHelp"
                     value={note.etitle}
+                   
                   />
                 </div>
                 <div className="mb-3">
@@ -94,6 +105,7 @@ const Notes = () => {
                     id="edescription"
                     name="edescription"
                     value={note.edescription}
+                    
                   />
                 </div>
                 <div className="mb-3">
@@ -113,13 +125,19 @@ const Notes = () => {
             </div>
             <div className="modal-footer">
               <button
+                ref={refClose}
                 type="button"
                 className="btn btn-secondary"
                 data-bs-dismiss="modal"
               >
                 Close
               </button>
-              <button onClick={handleClick} type="button" className="btn btn-primary">
+              <button
+                onClick={handleClick}
+                type="button"
+                className="btn btn-primary"
+                disabled={note.etitle.length <5 || note.edescription.length < 5}
+              >
                 Update Note
               </button>
             </div>
@@ -128,6 +146,9 @@ const Notes = () => {
       </div>
       <div className="row my-3">
         <h3>Your Notes</h3>
+        <div className="container">
+          {notes.length === 0 && "No notes to display"}
+        </div>
         {notes.map((note) => {
           return (
             <NoteItem key={note._id} updateNote={updateNote} note={note} />
