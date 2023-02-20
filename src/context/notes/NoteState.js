@@ -13,7 +13,7 @@ const NoteState = (props) => {
       method: "GET",
       headers: {
         "auth-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjNkOGQzMGViZmM2NDk3ZWMzZjQ1NTViIn0sImlhdCI6MTY3NTE5MzEwN30.REd40HKou_SvZSMwi2kokZ1W4fyibbJL5YorULwpAl4",
+          localStorage.getItem("token"),
       },
     });
     const json = await response.json();
@@ -29,7 +29,7 @@ const NoteState = (props) => {
       headers: {
         "Content-Type": "application/json",
         "auth-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjNkOGQzMGViZmM2NDk3ZWMzZjQ1NTViIn0sImlhdCI6MTY3NTE5MzEwN30.REd40HKou_SvZSMwi2kokZ1W4fyibbJL5YorULwpAl4",
+          localStorage.getItem("token"),
       },
       body: JSON.stringify({ title, description, tag }),
     });
@@ -45,11 +45,11 @@ const NoteState = (props) => {
       method: "DELETE",
       headers: {
         "auth-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjNkOGQzMGViZmM2NDk3ZWMzZjQ1NTViIn0sImlhdCI6MTY3NTE5MzEwN30.REd40HKou_SvZSMwi2kokZ1W4fyibbJL5YorULwpAl4",
+          localStorage.getItem("token"),
       },
     });
     const json = response.json();
-    console.log("Note Deleted" + id);
+    console.log("Note Deleted" + id,json);
     let newNote = notes.filter((x) => {
       return x._id !== id;
     });
@@ -64,12 +64,12 @@ const NoteState = (props) => {
       headers: {
         "Content-Type": "application/json",
         "auth-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjNkOGQzMGViZmM2NDk3ZWMzZjQ1NTViIn0sImlhdCI6MTY3NTE5MzEwN30.REd40HKou_SvZSMwi2kokZ1W4fyibbJL5YorULwpAl4",
+          localStorage.getItem("token"),
       },
       body: JSON.stringify({ title, description, tag }),
     });
     const json = await response.json();
-    //console.log(json);
+    console.log(json);
 
     let newNotes = JSON.parse(JSON.stringify(notes)); //because in react u cannot directly change state
     //Logic to edit in client

@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import noteContext from "../context/notes/noteContext";
 import AddNote from "./AddNote";
 import NoteItem from "./NoteItem";
 
 const Notes = (props) => {
   const context = useContext(noteContext);
-
+  const navigate=useNavigate();
   const { notes, getNotes, editNote } = context;
 
   /* with the help of useRef hook u can give any element a reference and basically u can manipulate DOM*/
@@ -31,7 +32,13 @@ const Notes = (props) => {
   };
 
   useEffect(() => {
-    getNotes();
+    if(localStorage.getItem('token')){
+      getNotes();
+    }
+    else{
+      navigate("/login")
+    }
+   
     // eslint-disable-next-line
   }, []);
 

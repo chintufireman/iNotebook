@@ -1,5 +1,4 @@
 import Notes from "./Notes";
-import Alert from "./Alert";
 const Home = (props) => {
   return (
     <div>

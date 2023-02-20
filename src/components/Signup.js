@@ -20,9 +20,9 @@ const Signup = (props) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name:credentials.name,
-        email: credentials.email,
-        password: credentials.password,
+        name:name,
+        email: email,
+        password: password,
       }),
     });
     const json = await response.json();
@@ -42,7 +42,8 @@ const Signup = (props) => {
   };
 
   return (
-    <div className="container">
+    <div className="container mt">
+      <h2>Create an account to use iNoteBook</h2>
       <form>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
